@@ -1,0 +1,39 @@
+body{
+    background: linear-gradient(135deg,#6f42c1,#9b59b6);
+    min-height:100vh;
+}
+
+.navbar{
+    background:#5b21b6 !important;
+}
+
+.card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.card-header{
+    background:#7c3aed !important;
+    color:white;
+}
+
+.btn-primary{
+    background:#7c3aed;
+    border:none;
+}
+
+.btn-primary:hover{
+    background:#6d28d9;
+}
+
+.product-img{
+    width:80px;
+    height:80px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.table{
+    background:white;
+}
