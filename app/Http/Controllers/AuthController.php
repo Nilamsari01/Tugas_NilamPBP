@@ -55,7 +55,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'role' => 'required|in:admin,staff',
+            'role' => 'nullable|in:admin,staff',
         ]);
 
         if ($validator->fails()) {
@@ -68,7 +68,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role' => $request->role ?? 'staff',
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');

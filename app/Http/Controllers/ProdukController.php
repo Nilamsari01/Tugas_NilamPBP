@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Kategori;
 use App\Models\Produk;
 use App\Models\Supplier;
+use Barryvdh\DomPDF\Facades\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProdukExport;
 
 class ProdukController extends Controller
 {
@@ -31,6 +34,32 @@ class ProdukController extends Controller
         $suppliers = Supplier::all();
 
         return view('produk.index', compact('produks', 'kategoris', 'suppliers'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Produk::with(['kategori', 'supplier']);
+
+        if ($search = $request->query('search')) {
+            $query->where(function ($sub) use ($search) {
+                $sub->where('kode_produk', 'like', "%{$search}%")
+                    ->orWhere('nama_produk', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('kategori_id')) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        $produks = $query->latest()->get();
+        $pdf = Pdf::loadView('produk.pdf', compact('produks'));
+
+        return $pdf->download('produk-list.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(new ProdukExport($request->all()), 'produk-list.xlsx');
     }
 
     public function create()
